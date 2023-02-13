@@ -10,15 +10,15 @@ class RotatingMbr():
 
     Args:
         pointCloud (pointCloud): point cloud to search for mbr
-        rotatingStep (int, optional): rotating step in degrees to find mbr. Defaults to 1.
+        rotationStep (int, optional): rotating step in degrees to find mbr. Defaults to 1.
     """
-    def __init__(self,pointCloud,step=1):
+    def __init__(self,pointCloud,rotationStep=1):
 
         self.pointCloud = pointCloud
         self.bestMbrPoints,self.bestMbrArea = self.calculateMbr(pointCloud)
         self.bestMbrAngle = 0
         self.center = (self.bestMbrPoints[0] + self.bestMbrPoints[2]) / 2
-        self.step = step
+        self.rotationStep = rotationStep
         self.calculateRotatingMbr(pointCloud)
 
     def __repr__(self):
@@ -59,7 +59,7 @@ class RotatingMbr():
         return [p1,p2,p3,p4],area
 
     def calculateRotatingMbr(self,cloud):
-        for angle in range(0,90,self.step):
+        for angle in range(0,90,self.rotationStep):
             cloud_rotated = self.rotatePointCloud(cloud,angle,self.center)
             mbrPoints,mbrArea = self.calculateMbr(cloud_rotated)
             if mbrArea < self.bestMbrArea:
@@ -73,7 +73,7 @@ class RotatingMbr():
         points = []
         angles = []
         areas = []
-        for angle in range(0,90,self.step):
+        for angle in range(0,90,self.rotationStep):
             cloud_rotated = self.rotatePointCloud(self.pointCloud,angle,self.center)
             mbrPoints,mbrArea = self.calculateMbr(cloud_rotated)
             points.append(self.rotatePointCloud(mbrPoints,-angle,self.center))
